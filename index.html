@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>WebStack 导航 | 优化版</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, 'Segoe UI', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f4f5f7;
+            color: #1e293b;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+            position: relative;
+        }
+
+        /* ========= 左侧边栏 (桌面端默认显示) ========= */
+        .sidebar {
+            width: 280px;
+            background: #ffffff;
+            border-right: 1px solid #eef2f6;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.08);
+            overflow-y: auto;
+            flex-shrink: 0;
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: 200;
+        }
+
+        /* Logo区域 */
+        .logo-area {
+            padding: 24px 20px;
+            border-bottom: 1px solid #eff3f8;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fff;
+        }
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 6px 12px -6px rgba(59,130,246,0.3);
+        }
+        .logo-text h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            background: linear-gradient(120deg, #1e293b, #3b82f6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .logo-text p {
+            font-size: 0.7rem;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .nav-menu {
+            flex: 1;
+            padding: 20px 12px 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* 一级菜单项 */
+        .menu-item {
+            border-radius: 14px;
+            transition: all 0.2s;
+        }
+        .menu-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #1e293b;
+            transition: background 0.2s;
+            user-select: none;
+        }
+        .menu-header:hover {
+            background: #f1f5f9;
+        }
+        .menu-header .title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+        .menu-header .title i {
+            width: 24px;
+            color: #3b82f6;
+            font-size: 1.1rem;
+        }
+        .chevron {
+            transition: transform 0.25s;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .menu-item.open .chevron {
+            transform: rotate(90deg);
+        }
+        /* 二级菜单列表 */
+        .sub-menu {
+            list-style: none;
+            margin-left: 28px;
+            padding-left: 12px;
+            border-left: 2px solid #eef2ff;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            max-height: 500px;
+        }
+        .menu-item:not(.open) .sub-menu {
+            max-height: 0;
+        }
+        .sub-menu li {
+            margin: 6px 0;
+        }
+        .sub-cat {
+            display: block;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .sub-cat i {
+            width: 24px;
+            display: inline-block;
+            font-size: 0.8rem;
+            margin-right: 8px;
+            color: #7c8ba0;
+        }
+        .sub-cat:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+        .sub-cat.active {
+            background: #eef2ff;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .sub-cat.active i {
+            color: #2563eb;
+        }
+
+        /* ========= 右侧主区域 ========= */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #f8fafc;
+            width: 100%;
+        }
+        /* 顶部栏：搜索 + 汉堡菜单（桌面端隐藏汉堡按钮） */
+        .top-bar {
+            background: white;
+            padding: 16px 24px;
+            border-bottom: 1px solid #eef2f6;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            cursor: pointer;
+            color: #334155;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: none; /* 桌面端隐藏 */
+            align-items: center;
+            justify-content: center;
+        }
+        .menu-toggle:hover {
+            background: #f1f5f9;
+        }
+        .search-wrapper {
+            flex: 1;
+            position: relative;
+            max-width: 500px;
+        }
+        .search-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            border: 1px solid #e2e8f0;
+            border-radius: 32px;
+            font-size: 0.9rem;
+            background: #ffffff;
+            transition: all 0.2s;
+            outline: none;
+        }
+        #searchInput:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+        }
+
+        /* 滚动区域：包含卡片和页脚 */
+        .scrollable-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px 24px;
+        }
+
+        /* 分组样式 */
+        .category-group {
+            margin-bottom: 32px;
+            scroll-margin-top: 20px; /* 滚动时留出顶部间距 */
+        }
+        .category-group:last-child {
+            margin-bottom: 0;
+        }
+        .group-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            /* 去掉分类标题下面的线 */
+            border-bottom: none;
+        }
+        .group-title i {
+            font-size: 1.4rem;
+            color: #3b82f6;
+            background: #eef2ff;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+        }
+        .group-title h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #0f172a;
+            letter-spacing: -0.2px;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 22px;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.03);
+            border: 1px solid #edf2f7;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.12);
+            border-color: #cbdff2;
+        }
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(145deg, #f1f5fe, #ffffff);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #3b82f6;
+            flex-shrink: 0;
+            box-shadow: 0 4px 8px -4px rgba(0,0,0,0.05);
+        }
+        .card-content {
+            flex: 1;
+        }
+        .card-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 6px;
+            color: #0f172a;
+        }
+        .card-desc {
+            font-size: 0.75rem;
+            color: #5b6e8c;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        /* 页脚样式 */
+        .footer {
+            margin-top: 3rem;
+            text-align: center;
+            padding: 1.5rem 1rem 1rem;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.8rem;
+            color: #5b6e8c;
+            background: #f8fafc;
+        }
+        .footer a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .footer .heart {
+            color: #ef4444;
+            margin: 0 2px;
+        }
+        .footer .copyright {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        /* 移动端遮罩层（仅移动端使用） */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 99;
+            backdrop-filter: blur(2px);
+        }
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* ========= 弹窗样式 ========= */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .modal-content {
+            position: relative;
+            background: white;
+            border-radius: 24px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            cursor: default;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 36px;
+            height: 36px;
+            background: #ff4444;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, background 0.2s;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .modal-close:hover {
+            background: #cc0000;
+            transform: scale(1.05);
+        }
+        .modal-img {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 24px;
+        }
+
+        /* ========= 响应式: 移动端 (宽度 ≤ 768px) ========= */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100%;
+                transform: translateX(-100%);
+                z-index: 200;
+                box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+                transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .menu-toggle {
+                display: flex; /* 移动端显示汉堡按钮 */
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .top-bar {
+                padding: 12px 16px;
+            }
+            .scrollable-content {
+                padding: 20px 16px;
+            }
+            .group-title h2 {
+                font-size: 1.1rem;
+            }
+            .footer {
+                padding: 1rem 0.8rem;
+                margin-top: 2rem;
+            }
+            .modal-content {
+                max-width: 95vw;
+                max-height: 95vh;
+            }
+            .modal-close {
+                width: 32px;
+                height: 32px;
+                font-size: 20px;
+                top: 8px;
+                left: 8px;
+            }
+        }
+
+        /* 滚动条 */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #eef2f6;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="sidebar" id="sidebar">
+        <div class="logo-area">
+            <div class="logo-icon"><i class="fas fa-compass"></i></div>
+            <div class="logo-text">
+                <h1>导航网址</h1>
+                <p>资源·工具·灵感</p>
+            </div>
+        </div>
+        <div class="nav-menu" id="navMenu"></div>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <div class="main">
+        <div class="top-bar">
+            <button class="menu-toggle" id="menuToggleBtn"><i class="fas fa-bars"></i></button>
+            <div class="search-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="搜索站点名称、描述...">
+            </div>
+        </div>
+        <div class="scrollable-content">
+            <div id="cardsContainer"></div>
+            <!-- 页脚位于卡片列表之后，随内容滚动 -->
+            <div class="footer">
+                <p>📚 开源导航 | 收录优质实用资源，让上网更高效。 所有链接仅供学习参考，指向互联网公开内容。</p>
+                <p style="margin-top: 8px;">⚡ 持续更新 · 建议收藏 · <i class="fas fa-heart heart"></i> 共享知识</p>
+                <div class="copyright">
+                    © 2025 WebStack 导航 | <a href="#">关于我们</a> | <a href="#">反馈建议</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 弹窗结构 -->
+<div id="expressModal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="modal-close" id="modalCloseBtn">&times;</button>
+        <img id="modalImage"  src="img/su.jpg" alt="快递服务" style="width:100%; max-height:480px; object-fit:cover;">
+        <p>使用微信扫一扫  聚合多家快递品牌</p>
+    </div>
+</div>
+
+<script>
+    // ----- 分类结构 (基于 bhapp.top) -----
+    const primaryMenus = [
+        { id: "tools", name: "🔧 实用工具", icon: "fas fa-wrench" },
+        { id: "ai-dev", name: "🤖 AI与开发", icon: "fas fa-microchip" },
+        { id: "media", name: "🎬 影视娱乐", icon: "fas fa-film" },
+        { id: "read-music", name: "📖 阅读与音乐", icon: "fas fa-headphones" },
+        { id: "study-life", name: "🌟 学习生活", icon: "fas fa-graduation-cap" }
+    ];
+
+    const subCategories = [
+        { id: "soft_dir", name: "软件目录", parentId: "tools", icon: "fas fa-boxes" },
+        { id: "netdisk", name: "网盘搜索", parentId: "tools", icon: "fas fa-cloud-upload-alt" },
+        { id: "file_transfer", name: "文件互传", parentId: "tools", icon: "fas fa-exchange-alt" },
+        { id: "sms_temp", name: "临时接码网站", parentId: "tools", icon: "fas fa-mobile-alt" },
+        { id: "format_convert", name: "格式转换", parentId: "tools", icon: "fas fa-file-alt" },
+        { id: "online_edit", name: "在线修改", parentId: "tools", icon: "fas fa-edit" },
+        { id: "ai_tools", name: "AI工具集", parentId: "ai-dev", icon: "fas fa-robot" },
+        { id: "code_prog", name: "程序代码", parentId: "ai-dev", icon: "fas fa-code" },
+        { id: "icon_lib", name: "Icon图标", parentId: "ai-dev", icon: "fas fa-icons" },
+        { id: "magnet_play", name: "磁力播放", parentId: "media", icon: "fas fa-play-circle" },
+        { id: "magnet_search", name: "磁力种子", parentId: "media", icon: "fas fa-magnet" },
+        { id: "game_xiuxian", name: "游戏修仙", parentId: "media", icon: "fas fa-gamepad" },
+        { id: "movie_app", name: "观影软件", parentId: "media", icon: "fas fa-tv" },
+        { id: "online_video", name: "在线看影视", parentId: "media", icon: "fas fa-video" },
+        { id: "acg", name: "二次元动漫", parentId: "media", icon: "fas fa-dragon" },
+        { id: "novel_online", name: "在线小说漫画", parentId: "read-music", icon: "fas fa-book-open" },
+        { id: "novel_download", name: "小说漫画下载", parentId: "read-music", icon: "fas fa-download" },
+        { id: "concert", name: "演唱会目录", parentId: "read-music", icon: "fas fa-music" },
+        { id: "music_online", name: "在线试听歌曲", parentId: "read-music", icon: "fas fa-headphones" },
+        { id: "music_down", name: "音乐软件下载", parentId: "read-music", icon: "fas fa-download" },
+        { id: "education", name: "教育仓库", parentId: "study-life", icon: "fas fa-school" },
+        { id: "language", name: "语言专区", parentId: "study-life", icon: "fas fa-language" },
+        { id: "life_skills", name: "生活技能", parentId: "study-life", icon: "fas fa-heart" },
+        { id: "career", name: "职业技能", parentId: "study-life", icon: "fas fa-briefcase" },
+        { id: "office_temp", name: "办公模版", parentId: "study-life", icon: "fas fa-file-powerpoint" },
+        { id: "font_plug", name: "字体插件", parentId: "study-life", icon: "fas fa-font" },
+        { id: "wallpaper", name: "图片壁纸", parentId: "study-life", icon: "fas fa-image" },
+        { id: "video_parse", name: "视频解析", parentId: "study-life", icon: "fas fa-photo-video" },
+        { id: "friend_link", name: "友情链接", parentId: "study-life", icon: "fas fa-link" }
+    ];
+
+    // ----- 卡片数据 -----
+    const cardsData = [];
+    function addCard(catId, title, desc, url, iconClass) {
+        cardsData.push({ id: `${catId}_${cardsData.length}`, categoryId: catId, title, desc, url, icon: iconClass || "fas fa-globe" });
+    }
+    // 实用工具 软件目录
+    addCard("soft_dir", "异次元软件世界", "精品软件、绿色工具评测下载", "https://www.iplaysoft.com/", "fas fa-star");
+    addCard("soft_dir", "小众软件", "分享免费、小巧、有趣的软件", "https://www.appinn.com/", "fas fa-cube");
+    addCard("soft_dir","官方流量卡","免费办理 极速发货","https://m.szkytx.cn/haoka/?u=25076337","fas fa-utensils");
+    addCard("soft_dir", "影视", "在线影视站", "https://www.hjl26.cc:9999", "fas fa-film");
+    // 网盘搜索
+    addCard("netdisk", "大力盘搜索", "百度网盘资源搜索引擎", "https://www.dalipan.com/", "fas fa-search");
+    addCard("netdisk", "海搜", "网盘资源聚合搜索", "https://haisou.cc/", "fas fa-cloud");
+    addCard("netdisk","虫部落快搜","搜索快人一步","https://search.chongbuluo.com/","fas fa-search");
+    addCard("netdisk","迷鹿导航","方便快捷实用","https://www.plnav.com/","fas fa-search");
+    addCard("netdisk","爱达杂货铺","收集有用的导航","https://adzhp.cc/","fas fa-search");
+    // 文件互传
+    addCard("file_transfer", "文叔叔", "临时文件传输，不限速", "https://www.wenshushu.cn/", "fas fa-share-alt");
+    addCard("file_transfer", "Firefox Send", "加密文件分享", "https://send.firefox.com/", "fas fa-fire");
+    //临时接码
+    addCard("sms_temp", "在线接码平台", "临时手机号接收短信", "https://www.sms-activate.org/", "fas fa-sms");
+    addCard("sms_temp", "Textnow", "免费虚拟号码", "https://www.textnow.com/", "fas fa-phone-alt");
+    //格式转换
+    addCard("format_convert", "CloudConvert", "300+格式转换神器", "https://cloudconvert.com/", "fas fa-exchange-alt");
+    addCard("format_convert", "Convertio", "在线文件转换器", "https://convertio.co/zh/", "fas fa-file-export");
+    // 在线修改
+    addCard("online_edit", "Photopea", "在线PS照片编辑器", "https://www.photopea.com/", "fas fa-pen-fancy");
+    addCard("online_edit", "PDF24", "免费PDF编辑工具", "https://tools.pdf24.org/", "fas fa-file-pdf");
+    // AI与开发
+    addCard("ai_tools", "ChatGPT", "OpenAI智能对话助手", "https://chat.openai.com/", "fas fa-comment-dots");
+    addCard("ai_tools", "Midjourney", "AI绘画生成器", "https://www.midjourney.com/", "fas fa-palette");
+    addCard("ai_tools", "Notion AI", "智能写作工作区", "https://www.notion.so/", "fas fa-brain");
+    // 程序代码
+    addCard("code_prog", "GitHub", "全球开源社区", "https://github.com/", "fab fa-github");
+    addCard("code_prog", "Stack Overflow", "编程问答社区", "https://stackoverflow.com/", "fab fa-stack-overflow");
+    //图标
+    addCard("icon_lib", "Iconify", "海量开源图标库", "https://iconify.design/", "fas fa-icons");
+    addCard("icon_lib", "Flaticon", "矢量图标素材库", "https://www.flaticon.com/", "fas fa-paint-brush");
+    // 影视娱乐
+    addCard("magnet_play", "WebTorrent", "磁力在线播放器", "https://webtorrent.io/", "fas fa-play");
+    addCard("magnet_play", "BT蚂蚁", "磁力链接播放工具", "#", "fas fa-download");
+    //
+    addCard("magnet_search", "BTDigg", "磁力搜索引擎", "https://btdig.com/", "fas fa-search");
+    addCard("magnet_search", "磁力猫", "资源索引站", "#", "fas fa-cat");
+    //
+    addCard("game_xiuxian", "Steam", "正版游戏平台", "https://store.steampowered.com/", "fab fa-steam");
+    addCard("game_xiuxian", "TapTap", "手游推荐社区", "https://www.taptap.cn/", "fas fa-gamepad");
+    //
+    addCard("movie_app", "PotPlayer", "全能本地播放器", "https://potplayer.daum.net/", "fas fa-play-circle");
+    addCard("movie_app", "VLC", "开源跨平台播放器", "https://www.videolan.org/", "fas fa-video");
+    //
+    addCard("online_video", "茶杯狐", "影视搜索导航", "https://cupfox.app/", "fas fa-tv");
+    addCard("online_video", "4k影视", "超清、秒播、拖拽不卡顿", "https://www.4kvm.org/", "fas fa-film");
+    //
+    addCard("acg", "Bangumi", "番组计划，动漫数据库", "https://bangumi.tv/", "fas fa-star");
+    addCard("acg", "萌娘百科", "ACG百科全书", "https://zh.moegirl.org.cn/", "fas fa-smile");
+    // 阅读与音乐
+    addCard("novel_online", "笔趣阁", "小说在线阅读", "#", "fas fa-book");
+    addCard("novel_online", "动漫之家", "漫画社区", "https://www.dmzj.com/", "fas fa-comic");
+    //
+    addCard("novel_download", "知轩藏书", "精校小说下载", "http://zxcs.me/", "fas fa-file-download");
+    addCard("novel_download", "漫画柜", "高清漫画下载", "https://www.manhuagui.com/", "fas fa-images");
+    //
+    addCard("concert", "LiveMusic", "高清演唱会资源站", "#", "fas fa-microphone-alt");
+    addCard("concert", "Billboard现场", "经典舞台录像", "#", "fas fa-music");
+    //
+    addCard("music_online", "Spotify", "全球流行音乐", "https://open.spotify.com/", "fab fa-spotify");
+    addCard("music_online", "网易云音乐", "发现好音乐", "https://music.163.com/", "fas fa-headphones");
+    addCard("music_online","闪闪音乐网","闪闪音乐网","https://www.33ve.com/","fas fa-music");
+    //
+    addCard("music_down", "Listen1", "跨平台音乐播放器", "https://listen1.github.io/listen1/", "fas fa-music");
+    addCard("music_down", "Foobar2000", "专业音频播放器", "https://www.foobar2000.org/", "fas fa-headphones");
+    // 学习生活
+    addCard("education", "中国大学MOOC", "名校课程", "https://www.icourse163.org/", "fas fa-university");
+    addCard("education", "Coursera", "国际在线课程", "https://www.coursera.org/", "fas fa-graduation-cap");
+    addCard("language", "多邻国", "免费学外语", "https://www.duolingo.com/", "fas fa-language");
+    addCard("language", "沪江网校", "语言培训平台", "https://class.hujiang.com/", "fas fa-chalkboard");
+    //
+    addCard("life_skills", "下厨房", "美食菜谱社区", "https://www.xiachufang.com/", "fas fa-utensils");
+    addCard("life_skills", "wikiHow", "万事指南", "https://zh.wikihow.com/", "fas fa-lightbulb");
+    // 快递卡片，无链接，使用弹窗
+    addCard("life_skills","发快递","免费上门取件","javascript:void(0);","fas fa-truck");
+    //
+    addCard("career", "B站课堂", "技能提升视频", "https://www.bilibili.com/", "fab fa-bilibili");
+    addCard("career", "慕课网", "IT技能实战", "https://www.imooc.com/", "fas fa-laptop-code");
+    //
+    addCard("office_temp", "第一PPT", "免费PPT模板", "http://www.1ppt.com/", "fas fa-chalkboard");
+    addCard("office_temp", "石墨文档", "在线协作模板", "https://shimo.im/", "fas fa-file-alt");
+    addCard("font_plug", "识字体网", "在线字体识别", "https://www.likefont.com/", "fas fa-font");
+    addCard("font_plug", "Google Fonts", "免费商用字体库", "https://fonts.google.com/", "fab fa-google");
+    addCard("wallpaper", "Wallhaven", "超清壁纸库", "https://wallhaven.cc/", "fas fa-image");
+    addCard("wallpaper", "Unsplash", "无版权图片", "https://unsplash.com/", "fas fa-camera");
+    addCard("video_parse", "VIP视频解析", "全网视频解析接口", "https://home.nuaa.tech/vip/", "fas fa-video");
+    addCard("video_parse", "解析工具聚合", "多线路解析", "https://v.zhenlang.cc/", "fas fa-link");
+    addCard("friend_link", "小众软件论坛", "软硬玩家聚集地", "https://meta.appinn.net/", "fas fa-users");
+   
+    addCard("friend_link", "知乎", "知识社区", "https://www.zhihu.com/", "fab fa-zhihu");
+
+    // DOM 元素
+    const navMenuEl = document.getElementById("navMenu");
+    const cardsContainer = document.getElementById("cardsContainer");
+    const searchInput = document.getElementById("searchInput");
+    const sidebar = document.getElementById("sidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+    const menuToggleBtn = document.getElementById("menuToggleBtn");
+    const modal = document.getElementById("expressModal");
+    const modalCloseBtn = document.getElementById("modalCloseBtn");
+    const modalImage = document.getElementById("modalImage");
+
+    let currentSearchKeyword = "";
+    // 用于高亮侧边栏选中的二级分类
+    let activeSubCategoryId = null;
+
+    // 存储每个一级菜单的折叠/展开状态 (初始全部折叠)
+    const menuOpenState = {};
+    primaryMenus.forEach(menu => { menuOpenState[menu.id] = false; });
+
+    // 弹窗控制
+    function openModal(imgUrl) {
+        modalImage.src = imgUrl;
+        modal.style.display = "flex";
+        document.body.style.overflow = "hidden"; // 防止背景滚动
+    }
+    function closeModal() {
+        modal.style.display = "none";
+        document.body.style.overflow = "";
+    }
+
+    // 关闭侧边栏（仅移动端）
+    function closeSidebar() {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("active");
+        }
+    }
+    // 打开侧边栏（仅移动端）
+    function openSidebar() {
+        if (window.innerWidth <= 768) {
+            sidebar.classList.add("open");
+            overlay.classList.add("active");
+        }
+    }
+
+    // 渲染侧边栏（保留折叠状态）
+    function renderSidebar() {
+        navMenuEl.innerHTML = "";
+        primaryMenus.forEach(primary => {
+            const childrenCats = subCategories.filter(cat => cat.parentId === primary.id);
+            if (childrenCats.length === 0) return;
+            const menuItemDiv = document.createElement("div");
+            const isOpen = menuOpenState[primary.id];
+            menuItemDiv.className = `menu-item ${isOpen ? 'open' : ''}`;
+            
+            const header = document.createElement("div");
+            header.className = "menu-header";
+            header.innerHTML = `
+                <div class="title">
+                    <i class="${primary.icon}"></i>
+                    <span>${primary.name}</span>
+                </div>
+                <i class="fas fa-chevron-right chevron"></i>
+            `;
+            header.addEventListener("click", (e) => {
+                e.stopPropagation();
+                menuOpenState[primary.id] = !menuOpenState[primary.id];
+                renderSidebar();
+            });
+            
+            const subUl = document.createElement("ul");
+            subUl.className = "sub-menu";
+            childrenCats.forEach(sub => {
+                const li = document.createElement("li");
+                const linkSpan = document.createElement("span");
+                linkSpan.className = "sub-cat";
+                if (activeSubCategoryId === sub.id) linkSpan.classList.add("active");
+                linkSpan.innerHTML = `<i class="${sub.icon}"></i> ${sub.name}`;
+                linkSpan.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    // 1. 关闭其他所有一级菜单，只展开当前所属一级
+                    const targetParentId = sub.parentId;
+                    for (const key in menuOpenState) {
+                        menuOpenState[key] = (key === targetParentId);
+                    }
+                    renderSidebar();  // 刷新侧边栏
+                    
+                    // 2. 更新高亮
+                    activeSubCategoryId = sub.id;
+                    renderSidebar(); // 再次渲染以高亮当前选中项
+                    
+                    // 3. 清空搜索框，展示全部内容
+                    currentSearchKeyword = "";
+                    searchInput.value = "";
+                    // 重新渲染右侧（全部分组）
+                    renderCards();
+                    
+                    // 4. 滚动到对应分类位置
+                    scrollToCategory(sub.id);
+                    
+                    // 5. 关闭移动端侧边栏
+                    closeSidebar();
+                });
+                li.appendChild(linkSpan);
+                subUl.appendChild(li);
+            });
+            menuItemDiv.appendChild(header);
+            menuItemDiv.appendChild(subUl);
+            navMenuEl.appendChild(menuItemDiv);
+        });
+    }
+
+    // 滚动到指定分类
+    function scrollToCategory(categoryId) {
+        const targetElement = document.getElementById(`category-${categoryId}`);
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    // 渲染右侧：始终展示全部分组（不筛选），但支持搜索筛选
+    function renderCards() {
+        // 根据搜索词筛选卡片
+        let filteredCards = [...cardsData];
+        if (currentSearchKeyword && currentSearchKeyword.trim() !== "") {
+            const kw = currentSearchKeyword.trim().toLowerCase();
+            filteredCards = filteredCards.filter(card => 
+                card.title.toLowerCase().includes(kw) || card.desc.toLowerCase().includes(kw)
+            );
+        }
+        
+        if (filteredCards.length === 0) {
+            cardsContainer.innerHTML = `<div class="no-results"><i class="fas fa-folder-open"></i> 没有找到相关站点～ 试试其他关键词</div>`;
+            return;
+        }
+        
+        // 按二级分类分组
+        const groupMap = new Map();
+        filteredCards.forEach(card => {
+            const cat = subCategories.find(c => c.id === card.categoryId);
+            if (!cat) return;
+            if (!groupMap.has(cat.id)) {
+                groupMap.set(cat.id, { category: cat, cards: [] });
+            }
+            groupMap.get(cat.id).cards.push(card);
+        });
+        
+        // 按照 subCategories 原始顺序输出分组
+        const orderedGroups = [];
+        for (const cat of subCategories) {
+            if (groupMap.has(cat.id)) {
+                orderedGroups.push(groupMap.get(cat.id));
+            }
+        }
+        
+        let html = '';
+        for (const group of orderedGroups) {
+            const cat = group.category;
+            const cards = group.cards;
+            html += `
+                <div class="category-group" id="category-${cat.id}">
+                    <div class="group-title">
+                        <i class="${cat.icon}"></i>
+                        <h2>${escapeHtml(cat.name)}</h2>
+                    </div>
+                    <div class="cards-grid">
+                        ${cards.map(card => renderCardHtml(card)).join('')}
+                    </div>
+                </div>
+            `;
+        }
+        cardsContainer.innerHTML = html;
+    }
+    
+    function renderCardHtml(card) {
+        // 特殊处理“发快递”卡片：添加自定义类并阻止默认跳转
+        if (card.title === "发快递") {
+            return `
+                <a href="javascript:void(0);" class="card express-card" data-express="true">
+                    <div class="card-icon"><i class="${card.icon}"></i></div>
+                    <div class="card-content">
+                        <div class="card-title">${escapeHtml(card.title)}</div>
+                        <div class="card-desc">${escapeHtml(card.desc)}</div>
+                    </div>
+                </a>
+            `;
+        }
+        return `
+            <a href="${card.url}" target="_blank" rel="noopener noreferrer" class="card">
+                <div class="card-icon"><i class="${card.icon}"></i></div>
+                <div class="card-content">
+                    <div class="card-title">${escapeHtml(card.title)}</div>
+                    <div class="card-desc">${escapeHtml(card.desc)}</div>
+                </div>
+            </a>
+        `;
+    }
+    
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+    
+    function initSearch() {
+        searchInput.addEventListener("input", (e) => {
+            currentSearchKeyword = e.target.value;
+            if (currentSearchKeyword.trim() !== "") {
+                // 搜索时清除选中的分类高亮
+                activeSubCategoryId = null;
+                renderSidebar();
+            }
+            renderCards();
+        });
+    }
+    
+    // 事件委托：处理快递卡片点击
+    function bindExpressClick() {
+        cardsContainer.addEventListener("click", (e) => {
+            // 查找点击的目标或父级是否有 .express-card
+            let target = e.target;
+            while (target && target !== cardsContainer) {
+                if (target.classList && target.classList.contains("express-card")) {
+                    e.preventDefault();
+                    // 打开弹窗，使用快递图片
+                    openModal("img/su.jpg"); // 快递主题图片
+                    return;
+                }
+                target = target.parentElement;
+            }
+        });
+    }
+    
+    overlay.addEventListener("click", closeSidebar);
+    menuToggleBtn.addEventListener("click", openSidebar);
+    modalCloseBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+    });
+    
+    // 监听窗口大小变化，确保移动端侧边栏状态正确
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 768) {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("active");
+        }
+    });
+    
+    function init() {
+        renderSidebar();
+        renderCards();
+        initSearch();
+        bindExpressClick();
+        if (window.innerWidth <= 768) {
+            closeSidebar();
+        }
+    }
+    init();
+</script>
+</body>
+</html>
