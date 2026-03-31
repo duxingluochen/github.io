@@ -1,0 +1,125 @@
+.logo-area {
+    padding: 24px 20px;
+    border-bottom: 1px solid #eff3f8;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff;
+}
+.logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    box-shadow: 0 6px 12px -6px rgba(59,130,246,0.3);
+}
+.logo-text h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    background: linear-gradient(120deg, #1e293b, #3b82f6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+.logo-text p {
+    font-size: 0.7rem;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.nav-menu {
+    flex: 1;
+    padding: 20px 12px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.menu-item {
+    border-radius: 14px;
+    transition: all 0.2s;
+}
+.menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    cursor: pointer;
+    border-radius: 12px;
+    font-weight: 600;
+    color: #1e293b;
+    transition: background 0.2s;
+    user-select: none;
+}
+.menu-header:hover {
+    background: #f1f5f9;
+}
+.menu-header .title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+}
+.menu-header .title i {
+    width: 24px;
+    color: #3b82f6;
+    font-size: 1.1rem;
+}
+.chevron {
+    transition: transform 0.25s;
+    font-size: 0.8rem;
+    color: #94a3b8;
+}
+.menu-item.open .chevron {
+    transform: rotate(90deg);
+}
+.sub-menu {
+    list-style: none;
+    margin-left: 28px;
+    padding-left: 12px;
+    border-left: 2px solid #eef2ff;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+    max-height: 500px;
+}
+.menu-item:not(.open) .sub-menu {
+    max-height: 0;
+}
+.sub-menu li {
+    margin: 6px 0;
+}
+.sub-cat {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+.sub-cat i {
+    width: 24px;
+    display: inline-block;
+    font-size: 0.8rem;
+    margin-right: 8px;
+    color: #7c8ba0;
+}
+.sub-cat:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+.sub-cat.active {
+    background: #eef2ff;
+    color: #2563eb;
+    font-weight: 600;
+}
+.sub-cat.active i {
+    color: #2563eb;
+}

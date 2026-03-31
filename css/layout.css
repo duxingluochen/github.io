@@ -1,0 +1,50 @@
+.app {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+}
+
+/* 侧边栏基础尺寸 */
+.sidebar {
+    width: 280px;
+    background: #ffffff;
+    border-right: 1px solid #eef2f6;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.08);
+    overflow-y: auto;
+    flex-shrink: 0;
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    z-index: 200;
+}
+
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #f8fafc;
+    width: 100%;
+}
+
+.scrollable-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 24px;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 99;
+    backdrop-filter: blur(2px);
+}
+.sidebar-overlay.active {
+    display: block;
+}
