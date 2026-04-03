@@ -1,9 +1,14 @@
-// 获取 DOM 元素
+// ========== 全局变量声明（只在此处声明一次） ==========
+let activeSubCategoryId = null;
+let activePrimaryCategory = null;
+let currentSearchKeyword = "";
+
+// ========== DOM 元素 ==========
 const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("sidebarOverlay");
 const menuToggleBtn = document.getElementById("menuToggleBtn");
 
-// 侧边栏开关（仅移动端）
+// ========== 侧边栏开关函数 ==========
 function closeSidebar() {
     if (window.innerWidth <= 768) {
         sidebar.classList.remove("open");
@@ -17,7 +22,7 @@ function openSidebar() {
     }
 }
 
-// 绑定全局事件
+// ========== 事件绑定 ==========
 overlay.addEventListener("click", closeSidebar);
 menuToggleBtn.addEventListener("click", openSidebar);
 window.addEventListener("resize", () => {
@@ -27,7 +32,7 @@ window.addEventListener("resize", () => {
     }
 });
 
-// 初始化所有模块
+// ========== 初始化函数 ==========
 function init() {
     renderSidebar();
     renderCards();

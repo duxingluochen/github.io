@@ -12,7 +12,6 @@ function closeModal() {
     document.body.style.overflow = "";
 }
 
-// 绑定快递卡片点击事件（使用事件委托）
 function bindExpressClick() {
     const cardsContainer = document.getElementById("cardsContainer");
     cardsContainer.addEventListener("click", (e) => {
@@ -28,8 +27,5 @@ function bindExpressClick() {
     });
 }
 
-// 绑定弹窗关闭事件
 modalCloseBtn.addEventListener("click", closeModal);
-modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeModal();
-});
+modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });

@@ -123,3 +123,10 @@
 .sub-cat.active i {
     color: #2563eb;
 }
+
+.card-icon img.card-icon-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 10px;
+}

@@ -144,3 +144,18 @@
     color: #94a3b8;
     font-size: 1rem;
 }
+
+.card-icon-img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    border-radius: 8px;   /* 可选 */
+    display: block;
+}
+
+.card-icon img.card-icon-img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 10px;
+}

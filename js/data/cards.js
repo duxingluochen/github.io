@@ -1,7 +1,25 @@
-const cardsData = [];
+const cardsData = [];   //二级卡片
+const primaryCardsData = []; // 一级菜单直接卡片
 
 function addCard(catId, title, desc, url, iconClass) {
-    cardsData.push({ id: `${catId}_${cardsData.length}`, categoryId: catId, title, desc, url, icon: iconClass || "fas fa-globe" });
+    cardsData.push({
+        id: `${catId}_${cardsData.length}`,
+        categoryId: catId,
+        title, desc, url,
+        icon: iconClass || "fas fa-globe",
+        type: "sub"
+    });
+}
+
+//一级菜单渲染
+function addPrimaryCard(primaryId, title, desc, url, iconClass) {
+    primaryCardsData.push({
+        id: `${primaryId}_${primaryCardsData.length}`,
+        primaryId: primaryId,
+        title, desc, url,
+        icon: iconClass || "fas fa-globe",
+        type: "primary"
+    });
 }
 
 // 以下为所有卡片数据（与原来相同，为节省篇幅此处省略，实际使用时复制原 cardsData 的添加部分）
@@ -9,6 +27,15 @@ function addCard(catId, title, desc, url, iconClass) {
 // 示例：
 // addCard("soft_dir", "异次元软件世界", "精品软件、绿色工具评测下载", "https://www.iplaysoft.com/", "fas fa-star");
 // ... 
+//渲染酷站推荐
+addPrimaryCard("cool", "豆包", "智能助手", "https://www.doubao.com/chat/", "fas fa-robot");
+addPrimaryCard("cool","低价流量卡","免费办理 极速发货","https://m.szkytx.cn/haoka/?u=25076337","fas fa-utensils");
+addPrimaryCard("cool","发快递","免费上门取件","javascript:void(0);","fas fa-truck");
+addPrimaryCard("cool","好好看","密码:cys9 免费看电影、电视剧、连续剧、综艺记录、动漫等等影视","https://wwbis.lanzouu.com/b01bjbmxti","fas fa-fire");
+addPrimaryCard("cool","蜜桃","密码:c598 内涵文、二次元韩漫&高清无码点播、短视频、吃瓜免费看","https://wwbis.lanzouu.com/b01bjbmy2h","img/mtsp.png");
+addPrimaryCard("cool","可可影视","密码:4tpt 免费看电影、电视剧、连续剧、综艺记录、动漫等等影视","https://wwbis.lanzouu.com/b01bjbmy7c","img/kkdy.png");
+//推荐
+
 // 实用工具 软件目录
 addCard("soft_dir", "异次元软件世界", "精品软件、绿色工具评测下载", "https://www.iplaysoft.com/", "fas fa-star");
 addCard("soft_dir", "小众软件", "分享免费、小巧、有趣的软件", "https://www.appinn.com/", "fas fa-cube");
@@ -51,8 +78,14 @@ addCard("game_xiuxian", "Steam", "正版游戏平台", "https://store.steampower
 addCard("game_xiuxian", "TapTap", "手游推荐社区", "https://www.taptap.cn/", "fas fa-gamepad");
 addCard("movie_app", "PotPlayer", "全能本地播放器", "https://potplayer.daum.net/", "fas fa-play-circle");
 addCard("movie_app", "VLC", "开源跨平台播放器", "https://www.videolan.org/", "fas fa-video");
+//
 addCard("online_video", "茶杯狐", "影视搜索导航", "https://cupfox.app/", "fas fa-tv");
 addCard("online_video", "4k影视", "超清、秒播、拖拽不卡顿", "https://www.4kvm.org/", "fas fa-film");
+addCard("online_video","好好看","密码:cys9 免费看电影、电视剧、连续剧、综艺记录、动漫等等影视","https://wwbis.lanzouu.com/b01bjbmxti","fas fa-fire");
+addCard("online_video","蜜桃","密码:c598 内涵文、二次元韩漫&高清无码点播、短视频、吃瓜免费看","https://wwbis.lanzouu.com/b01bjbmy2h","img/mtsp.png");
+addCard("online_video","可可影视","密码:4tpt 免费看电影、电视剧、连续剧、综艺记录、动漫等等影视","https://wwbis.lanzouu.com/b01bjbmy7c","img/kkdy.png");
+
+//
 addCard("acg", "Bangumi", "番组计划，动漫数据库", "https://bangumi.tv/", "fas fa-star");
 addCard("acg", "萌娘百科", "ACG百科全书", "https://zh.moegirl.org.cn/", "fas fa-smile");
 // 阅读与音乐
@@ -70,6 +103,11 @@ addCard("music_down", "Foobar2000", "专业音频播放器", "https://www.foobar
 // 学习生活
 addCard("education", "中国大学MOOC", "名校课程", "https://www.icourse163.org/", "fas fa-university");
 addCard("education", "Coursera", "国际在线课程", "https://www.coursera.org/", "fas fa-graduation-cap");
+// 即时资讯
+addCard("hover","大盘云图","A股热力图","https://52etf.site/","fas fa-chart-line");
+addCard("hover","猫眼实时票房","提供电影、电视、综艺等影视内容实时票房数据","https://piaofang.maoyan.com/dashboard","fas fa-ticket-alt");
+
+
 addCard("language", "多邻国", "免费学外语", "https://www.duolingo.com/", "fas fa-language");
 addCard("language", "沪江网校", "语言培训平台", "https://class.hujiang.com/", "fas fa-chalkboard");
 addCard("life_skills", "下厨房", "美食菜谱社区", "https://www.xiachufang.com/", "fas fa-utensils");
