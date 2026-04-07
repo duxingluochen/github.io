@@ -43,6 +43,7 @@ addCard("soft_dir","官方流量卡","免费办理 极速发货","https://m.szky
 addCard("soft_dir", "影视", "在线影视站", "https://www.hjl26.cc:9999", "fas fa-film");
 addCard("soft_dir","点点链接","一个链接聚合分享你我全部","https://ddlink.cc/","img/DDlink-20241015173156.jpg");
 // 网盘搜索
+addCard("netdisk","秒搜","坚持做最好的网盘资源","https://miaosou.fun/","img/m.png");
 addCard("netdisk","小云","阿里云盘夸克云盘搜索神器","https://dash.yunso.net","img/favicon.ico");
 addCard("netdisk", "大力盘搜索", "百度网盘资源搜索引擎", "https://www.dalipan.com/", "fas fa-search");
 addCard("netdisk", "海搜", "网盘资源聚合搜索", "https://haisou.cc/", "fas fa-cloud");
