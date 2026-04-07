@@ -12,7 +12,7 @@ const subCategories = [
     //
 
     //实用工具
-    { id: "soft_dir", name: "软件目录", parentId: "tools", icon: "fas fa-boxes" },
+    { id: "soft_dir", name: "内容分享", parentId: "tools", icon: "fas fa-boxes" },
     { id: "netdisk", name: "网盘搜索", parentId: "tools", icon: "fas fa-cloud-upload-alt" },
     { id: "file_transfer", name: "文件互传", parentId: "tools", icon: "fas fa-exchange-alt" },
     { id: "sms_temp", name: "临时接码网站", parentId: "tools", icon: "fas fa-mobile-alt" },
