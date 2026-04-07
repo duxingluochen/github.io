@@ -32,6 +32,13 @@ window.addEventListener("resize", () => {
     }
 });
 
+// ========== 禁止右键菜单（阻止浏览器默认右键行为） ==========
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    // 可选：如果需要提示用户，可以添加 console.log 或轻提示
+    // console.log('右键已被禁用');
+});
+
 // ========== 初始化函数 ==========
 function init() {
     renderSidebar();
