@@ -30,7 +30,7 @@ const subCategories = [
     { id: "game_xiuxian", name: "游戏修仙", parentId: "media", icon: "fas fa-gamepad" },
     { id: "movie_app", name: "观影软件", parentId: "media", icon: "fas fa-tv" },
     { id: "online_video", name: "在线看影视", parentId: "media", icon: "fas fa-video" },
-    { id: "acg", name: "二次元动漫", parentId: "media", icon: "fas fa-dragon" },
+    { id: "acg", name: "动漫", parentId: "media", icon: "fas fa-dragon" },
     //
     { id: "novel_online", name: "在线小说漫画", parentId: "read-music", icon: "fas fa-book-open" },
     { id: "novel_download", name: "小说漫画下载", parentId: "read-music", icon: "fas fa-download" },
