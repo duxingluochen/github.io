@@ -18,7 +18,7 @@
     font-size: 20px;
     box-shadow: 0 6px 12px -6px rgba(59,130,246,0.3);
 }
-.logo-text h1 {
+.h2 {
     font-size: 1.35rem;
     font-weight: 700;
     letter-spacing: -0.3px;
@@ -27,6 +27,15 @@
     -webkit-background-clip: text;
     color: transparent;
 }
+/**.logo-text h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    background: linear-gradient(120deg, #1e293b, #3b82f6);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}**/
 .logo-text p {
     font-size: 0.7rem;
     color: #64748b;
