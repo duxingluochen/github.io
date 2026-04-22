@@ -133,4 +133,6 @@ addCard("friend_link", "小众软件论坛", "软硬玩家聚集地", "https://m
 addCard("friend_link", "知乎", "知识社区", "https://www.zhihu.com/", "fab fa-zhihu");
 addCard("friend_link","小光资源库","涵盖各类型,总资源10000T+","https://linkdd.cn/guangyu","img/DDlink-20241015173156.jpg");
 addCard("friend_link","查123","实用导航","https://www.cha123.xyz","fas fa-lightbulb");
-addCard("friend_link","搬砖的码农","分享技术，闲聊扯淡","https://refblogs.com/","fas fa-lightbulb")
+addCard("friend_link","搬砖的码农","分享技术，闲聊扯淡","https://refblogs.com/","fas fa-lightbulb");
+addCard("friend_link","土暑博客","实用技术与工具指南","https://toolshu.com","fas fa-chalkboard");
+addCard("friend_link","薄荷分享","分享是一种快乐","https://www.bhshare.cn/","fas fa-lightbulb")
