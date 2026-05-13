@@ -40,7 +40,7 @@ addPrimaryCard("cool","可可影视","密码:4tpt 免费看电影、电视剧、
 addCard("soft_dir", "异次元软件世界", "精品软件、绿色工具评测下载", "https://www.iplaysoft.com/", "fas fa-star");
 addCard("soft_dir", "小众软件", "分享免费、小巧、有趣的软件", "https://www.appinn.com/", "fas fa-cube");
 addCard("soft_dir","官方流量卡","免费办理 极速发货","https://m.szkytx.cn/haoka/?u=25076337","fas fa-utensils");
-addCard("soft_dir", "影视", "在线影视站", "https://www.hjl26.cc:9999", "fas fa-film");
+//addCard("soft_dir", "影视", "在线影视站", "https://www.hjl26.cc:9999", "fas fa-film");
 addCard("soft_dir","点点链接","一个链接聚合分享你我全部","https://ddlink.cc/","img/DDlink-20241015173156.jpg");
 // 网盘搜索
 addCard("netdisk","秒搜","坚持做最好的网盘资源","https://miaosou.fun/","img/m.png");
